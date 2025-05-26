@@ -1,4 +1,4 @@
-import { Link } from "@carbon/icons-react";
+import Link from "../design-system/link";
 import type { Column } from "../design-system/table";
 
 export const rowsData = [
