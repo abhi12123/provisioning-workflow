@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Heading from "../design-system/typography/Heading";
 import Body from "../design-system/typography/Body";
 import InputField from "../design-system/input-field";
@@ -13,6 +13,9 @@ import Combobox from "../design-system/combobox";
 import Checkbox from "../design-system/checkbox";
 import RadioGroup from "../design-system/radio-group.tsx";
 import Table from "../design-system/table/index.tsx";
+import useInView from "../hooks/useInView.ts";
+import RadioButton from "../design-system/radio/index.tsx";
+import Label from "../design-system/label/index.tsx";
 
 const tagPattern = /^[^:]+:[^:]+$/;
 
@@ -38,7 +41,13 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
-const ServiceDetails = () => {
+interface ServiceDetailsProps {
+  onChangeElementInView: (element: string) => void;
+}
+
+const ServiceDetails: React.FC<ServiceDetailsProps> = ({
+  onChangeElementInView,
+}) => {
   const {
     register,
     handleSubmit,
@@ -52,8 +61,11 @@ const ServiceDetails = () => {
       tags: [],
       createAsContainerDB: false,
       enableAutoMinorUpdate: false,
+      windowPreference: "no-preferences",
     },
   });
+
+  const { ref, isInView } = useInView({ threshold: 0.4 });
 
   const onSubmit = (data: FormData) => {
     console.log("Form submitted:", data);
@@ -74,9 +86,15 @@ const ServiceDetails = () => {
     }
   };
 
-  const windowPreference = watch("windowPreference");
+  useEffect(() => {
+    if (isInView) {
+      onChangeElementInView("additional-setting");
+    } else {
+      onChangeElementInView("service-details");
+    }
+  }, [isInView]);
 
-  console.log(windowPreference);
+  const windowPreference = watch("windowPreference");
 
   return (
     <form
@@ -92,22 +110,29 @@ const ServiceDetails = () => {
           </Body>
         </div>
         <div className="form-item">
-          <Body as="label">Service Name</Body>
+          <Label>Service Name</Label>
           <InputField {...register("serviceName")} />
           <Body className="form-error" variant="secondary">
             {errors.serviceName?.message}
           </Body>
         </div>
 
-        <div className="form-item">
-          <Body as="label">Description (optional)</Body>
-          <InputField {...register("description")} />
+        <div className="form-item-description">
+          <Label>Description (optional)</Label>
+          <InputField
+            variant="textarea"
+            rows={4}
+            {...register("description")}
+          />
         </div>
 
         <div className="form-item">
-          <Body as="label">Tags (format: key:value)</Body>
-          <InputField onKeyDown={handleAddTag} placeholder="Key:Value" />
-          <ul>
+          <Label>Tags</Label>
+          <InputField
+            onKeyDown={handleAddTag}
+            placeholder="Key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:Value"
+          />
+          <ul className="tags-container">
             {tags.map((tag: string, index: number) => (
               <Tag
                 key={index}
@@ -124,53 +149,58 @@ const ServiceDetails = () => {
             {errors.tags?.message}
           </Body>
         </div>
-
-        <div className="form-item">
-          <Body as="label">Software Release</Body>
-          <Controller
-            control={control}
-            name="softwareRelease"
-            render={({ field }) => (
-              <Combobox
-                value={field.value}
-                onValueChange={field.onChange}
-                options={[
-                  { label: "Release 1", value: "release-1" },
-                  { label: "Release 2", value: "release-2" },
-                  { label: "Release 3", value: "release-3" },
-                ]}
-              />
-            )}
-          />
-          <Body className="form-error" variant="secondary">
-            {errors.softwareRelease?.message}
-          </Body>
-        </div>
-
-        <div className="form-item">
-          <Body as="label">Version</Body>
-          <Controller
-            control={control}
-            name="version"
-            render={({ field }) => (
-              <Combobox
-                value={field.value}
-                onValueChange={field.onChange}
-                options={[
-                  { label: "21.0.0.0.1", value: "21.0.0.0.1" },
-                  { label: "21.0.0.0.2", value: "21.0.0.0.2" },
-                  { label: "21.0.0.0.3", value: "21.0.0.0.3" },
-                ]}
-              />
-            )}
-          />
-          <Body className="form-error" variant="secondary">
-            {errors.version?.message}
-          </Body>
-        </div>
-
         <div>
-          <Body as="label">Version</Body>
+          <Heading variant="md">Engine configuration</Heading>
+          <Body className="description">
+            Adjustable parameters, performance optimization, fine-tuning options
+          </Body>
+        </div>
+        <div className="form-column">
+          <div className="form-item">
+            <Label>Software Release</Label>
+            <Controller
+              control={control}
+              name="softwareRelease"
+              render={({ field }) => (
+                <Combobox
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    { label: "Release 1", value: "release-1" },
+                    { label: "Release 2", value: "release-2" },
+                    { label: "Release 3", value: "release-3" },
+                  ]}
+                />
+              )}
+            />
+            <Body className="form-error" variant="secondary">
+              {errors.softwareRelease?.message}
+            </Body>
+          </div>
+
+          <div className="form-item">
+            <Label>Version</Label>
+            <Controller
+              control={control}
+              name="version"
+              render={({ field }) => (
+                <Combobox
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    { label: "21.0.0.0.1", value: "21.0.0.0.1" },
+                    { label: "21.0.0.0.2", value: "21.0.0.0.2" },
+                    { label: "21.0.0.0.3", value: "21.0.0.0.3" },
+                  ]}
+                />
+              )}
+            />
+            <Body className="form-error" variant="secondary">
+              {errors.version?.message}
+            </Body>
+          </div>
+        </div>
+        <div>
           <Controller
             control={control}
             name="createAsContainerDB"
@@ -185,27 +215,22 @@ const ServiceDetails = () => {
                   }
                 }}
                 label="Create as Container Database"
+                id="createAsContainerDB"
               />
             )}
           />
         </div>
       </div>
 
-      <div className="additional-settings">
-        <div>
-          <Heading variant="md">Engine configuration</Heading>
-          <Body className="description">
-            Adjustable parameters, performance optimization, fine-tuning options
-          </Body>
-        </div>
+      <div className="additional-setting" ref={ref}>
         <div>
           <Heading variant="sm">Maintenance Window</Heading>
           <Body variant="secondary" className="description-light">
             Adjustable parameters, performance optimization, fine-tuning options
           </Body>
         </div>
-        <div>
-          <Body as="label">Window Preference</Body>
+        <div className="form-item">
+          <Label>Window Preference</Label>
           <Controller
             control={control}
             name="windowPreference"
@@ -213,12 +238,11 @@ const ServiceDetails = () => {
               <RadioGroup
                 value={field.value}
                 onValueChange={field.onChange}
-                options={[
-                  { label: "No Preferences", value: "no-preferences" },
-                  { label: "Select Window", value: "select-window" },
-                ]}
-                direction="row"
-              />
+                className="window-preference-radio-group"
+              >
+                <RadioButton label="No Preferences" value="no-preferences" />
+                <RadioButton label="Select window" value="select-window" />
+              </RadioGroup>
             )}
           />
           <Body className="form-error" variant="secondary">
@@ -229,7 +253,7 @@ const ServiceDetails = () => {
         {windowPreference === "select-window" && (
           <>
             <div className="form-item">
-              <Body as="label">Start Day</Body>
+              <Label>Start Day</Label>
               <InputField type="date" {...register("startDay")} />
               <Body className="form-error" variant="secondary">
                 {errors.startDay?.message}
@@ -237,7 +261,7 @@ const ServiceDetails = () => {
             </div>
 
             <div className="form-item">
-              <Body as="label">Start Time</Body>
+              <Label>Start Time</Label>
               <InputField type="time" {...register("startTime")} />
               <Body className="form-error" variant="secondary">
                 {errors.startTime?.message}
@@ -245,7 +269,7 @@ const ServiceDetails = () => {
             </div>
 
             <div className="form-item">
-              <Body as="label">Duration</Body>
+              <Label>Duration</Label>
               <Controller
                 control={control}
                 name="duration"
@@ -275,6 +299,7 @@ const ServiceDetails = () => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     label="Enable Auto Minor Version Update"
+                    id="enableAutoMinorUpdate"
                   />
                 )}
               />
@@ -293,7 +318,7 @@ const ServiceDetails = () => {
           </Body>
         </div>
         <div className="form-item">
-          <Body as="label">SLA</Body>
+          <Label>SLA</Label>
           <InputField type="text" {...register("sla")} />
           <Body className="form-error" variant="secondary">
             {errors.sla?.message}
@@ -301,7 +326,7 @@ const ServiceDetails = () => {
         </div>
 
         <div className="form-item">
-          <Body as="label">Snapshot Time</Body>
+          <Label>Snapshot Time</Label>
           <InputField type="time" {...register("snapshotTime")} />
           <Body className="form-error" variant="secondary">
             {errors.snapshotTime?.message}
@@ -311,7 +336,7 @@ const ServiceDetails = () => {
       </div>
       <style jsx>{`
         .service-details,
-        .additional-settings {
+        .additional-setting {
           display: flex;
           padding: var(--spacing-medium);
           flex-direction: column;
@@ -333,7 +358,15 @@ const ServiceDetails = () => {
           align-items: flex-start;
           gap: var(--spacing-regular, 8px);
           align-self: stretch;
-          width: 360px;
+          max-width: 50%;
+        }
+        .form-item-description {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-regular, 8px);
+          align-self: stretch;
+          max-width: 100%;
         }
         .form-error {
           color: var(--colors-danger-200);
@@ -345,6 +378,27 @@ const ServiceDetails = () => {
           align-items: flex-start;
           gap: 20px;
           flex: 1 0 0;
+        }
+        .window-preference-radio-group {
+          display: flex;
+          align-items: flex-start;
+          gap: var(--spacing-medium);
+        }
+        .tags-container {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-regular);
+          flex-flow: wrap;
+        }
+        .form-column {
+          display: flex;
+          align-items: flex-end;
+          gap: var(--spacing-medium);
+          width: 100%;
+        }
+        .form-column .form-item {
+          max-width: 100%;
+          width: 100%;
         }
       `}</style>
     </form>

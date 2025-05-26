@@ -10,7 +10,7 @@ const Tag: React.FC<TagProps> = ({ children, onDelete }) => {
   return (
     <>
       <div className="tag">
-        <AddAlt size={14} />
+        <AddAlt size={14} className="add-icon" />
         {children}
         <Close size={14} onClick={onDelete} />
       </div>
@@ -25,6 +25,11 @@ const Tag: React.FC<TagProps> = ({ children, onDelete }) => {
           border-radius: 1000px;
           background: var(--colors-surface-100);
           width: fit-content;
+          font-size: 11px;
+        }
+
+        .tag .add-icon {
+          color: var(--colors-text-subtlest);
         }
       `}</style>
     </>

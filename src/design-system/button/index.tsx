@@ -6,11 +6,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   trailingIcon?: React.ReactElement;
   loading?: boolean;
   children?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   leadingIcon,
+  fullWidth = false,
   trailingIcon,
   loading,
   children,
@@ -32,6 +34,12 @@ const Button: React.FC<ButtonProps> = ({
           cursor: pointer;
           transition: background-color 0.3s ease, box-shadow 0.2s ease;
           outline: none; /* removes native focus ring */
+          font-size: 11px;
+          font-style: normal;
+          font-weight: 450;
+          line-height: 16px;
+          letter-spacing: 0px;
+          ${fullWidth ? "width: 100%" : "width: max-content"}
         }
 
         .icon-button {

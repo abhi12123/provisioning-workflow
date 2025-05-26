@@ -24,6 +24,7 @@ const CreateHeader = () => {
           background: white;
           position: sticky;
           top: 48px;
+          z-index: 1;
         }
         .button-container {
           display: flex;

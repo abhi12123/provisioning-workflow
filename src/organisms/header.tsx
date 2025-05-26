@@ -24,6 +24,7 @@ const Header: React.FC<IHeader> = ({ lhs, rhs }) => {
             align-items: center;
             border-bottom: 1px solid var(--colors-surface-100);
             background: #fff;
+            z-index: 1;
           }
         `}
       </style>

@@ -6,46 +6,68 @@ const meta: Meta<typeof Checkbox> = {
   title: "Components/Checkbox",
   component: Checkbox,
   tags: ["autodocs"],
-  argTypes: {
-    checked: {
-      control: { type: "boolean" },
-    },
-    indeterminate: {
-      control: { type: "boolean" },
-    },
-    label: { control: "text" },
-    onCheckedChange: { action: "changed" },
-  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof Checkbox>;
 
+// ✅ Stateful Unchecked
 export const Unchecked: Story = {
-  args: {
-    label: "Unchecked",
-    checked: false,
-    indeterminate: false,
+  render: () => {
+    const [checked, setChecked] = useState(false);
+
+    return (
+      <Checkbox
+        label="Unchecked"
+        id="unchecked"
+        checked={checked}
+        onCheckedChange={setChecked}
+      />
+    );
   },
 };
 
+// ✅ Stateful Checked
 export const Checked: Story = {
-  args: {
-    label: "Checked",
-    checked: true,
-    indeterminate: false,
+  render: () => {
+    const [checked, setChecked] = useState(true);
+
+    return (
+      <Checkbox
+        label="Checked"
+        id="checked"
+        checked={checked}
+        onCheckedChange={setChecked}
+      />
+    );
   },
 };
 
+// ✅ Stateful Indeterminate
 export const Indeterminate: Story = {
-  args: {
-    label: "Indeterminate",
-    checked: false, // checked must be boolean
-    indeterminate: true,
+  render: () => {
+    const [checked, setChecked] = useState(false);
+    const [indeterminate, setIndeterminate] = useState(true);
+
+    const toggle = (val: boolean) => {
+      setIndeterminate(false);
+      setChecked(val);
+    };
+
+    return (
+      <Checkbox
+        label="Indeterminate"
+        id="indeterminate"
+        checked={checked}
+        indeterminate={indeterminate}
+        onCheckedChange={toggle}
+      />
+    );
   },
 };
 
+// ✅ Checkbox Group with Parent Control
 export const CheckboxGroup: Story = {
   render: () => {
     const [parentChecked, setParentChecked] = useState(false);
@@ -80,6 +102,7 @@ export const CheckboxGroup: Story = {
       <div>
         <Checkbox
           label="Parent"
+          id="parent"
           checked={parentChecked}
           indeterminate={parentIndeterminate}
           onCheckedChange={onParentChange}
@@ -89,9 +112,9 @@ export const CheckboxGroup: Story = {
             <Checkbox
               key={i}
               label={`Child ${i + 1}`}
+              id={`child-${i}`}
               checked={checked}
-              indeterminate={false}
-              onCheckedChange={(checked) => onChildChange(i, checked)}
+              onCheckedChange={(val) => onChildChange(i, val)}
             />
           ))}
         </div>

@@ -2,12 +2,31 @@ import React, { useState } from "react";
 import SidebarItem from "../molecules/sidebar-item";
 import Heading from "../design-system/typography/Heading";
 import TesselBrandIcon from "../assets/tessel-brand-icon";
-import { Apps, Db2Database, OpenPanelLeft } from "@carbon/icons-react";
+import {
+  Add,
+  Apps,
+  Checkmark,
+  CicsDb2Connection,
+  CustomerService,
+  Db2Database,
+  Demo,
+  IbmCloudBareMetalServer,
+  MeterAlt,
+  OpenPanelLeft,
+  PinFilled,
+  Script,
+} from "@carbon/icons-react";
 import Button from "../design-system/button";
 import { useSidebarExpanded } from "../providers/sidebar";
+import Select from "../design-system/select";
 
 const Sidebar = () => {
   const { toggleExpanded, isExpanded } = useSidebarExpanded();
+  const options = [
+    { label: "DB Services", value: "db" },
+    { label: "Provisioning", value: "provisioning" },
+    { label: "Servers", value: "servers" },
+  ];
 
   return (
     <>
@@ -29,39 +48,49 @@ const Sidebar = () => {
               leadingIcon={<Apps size={16} />}
               label={isExpanded ? "Apps" : ""}
             />
+            {isExpanded && <Select options={options} value="db" />}
             <SidebarItem
               leadingIcon={<Db2Database size={16} />}
               label={isExpanded ? "My services" : ""}
-              isActive
             />
             <SidebarItem
-              leadingIcon={<Db2Database size={16} />}
-              label={isExpanded ? "My services" : ""}
-              isActive
+              leadingIcon={<CicsDb2Connection size={16} />}
+              label={isExpanded ? "Provisioning" : ""}
             />
             <SidebarItem
-              leadingIcon={<Db2Database size={16} />}
-              label={isExpanded ? "My services" : ""}
-              isActive
+              leadingIcon={<Checkmark size={16} />}
+              label={isExpanded ? "Availability Machines" : ""}
             />
             <SidebarItem
-              leadingIcon={<Db2Database size={16} />}
-              label={isExpanded ? "My services" : ""}
-              isActive
+              leadingIcon={<Demo size={16} />}
+              label={isExpanded ? "Dataflix" : ""}
             />
             <SidebarItem
-              leadingIcon={<Db2Database size={16} />}
-              label={isExpanded ? "My services" : ""}
-              isActive
+              leadingIcon={<Script size={16} />}
+              label={isExpanded ? "ScriptLibrary" : ""}
             />
             <SidebarItem
-              leadingIcon={<Db2Database size={16} />}
-              label={isExpanded ? "My services" : ""}
-              isActive
+              leadingIcon={<MeterAlt size={16} />}
+              label={isExpanded ? "Benchmarks" : ""}
+            />
+            <SidebarItem
+              leadingIcon={<IbmCloudBareMetalServer size={16} />}
+              label={isExpanded ? "Servers" : ""}
             />
           </div>
         </div>
-        <div>Footer</div>
+        <div className="sidebar-items-container">
+          <SidebarItem
+            leadingIcon={<Add size={16} />}
+            label={isExpanded ? "Invite people" : ""}
+            trailingIcon={isExpanded ? <PinFilled /> : undefined}
+          />
+          <SidebarItem
+            leadingIcon={<CustomerService size={16} />}
+            label={isExpanded ? "Help & Support" : ""}
+            trailingIcon={isExpanded ? <PinFilled /> : undefined}
+          />
+        </div>
       </div>
       <style jsx>
         {`
@@ -76,7 +105,6 @@ const Sidebar = () => {
             background: var(--colors-surface-0);
             position: fixed;
             height: 100dvh;
-            color: #11567f;
             font-weight: 600;
           }
           .sidebar-content {

@@ -7,7 +7,6 @@ export type TypographyHTMLTags =
   | "h6"
   | "p"
   | "span"
-  | "label"
   | "strong"
   | "em"
   | "blockquote"

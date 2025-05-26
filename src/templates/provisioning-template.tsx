@@ -5,14 +5,12 @@ interface ProvisioningTemplateProps {
   header: ReactElement;
   statusAndEstimation: ReactElement;
   serviceDetails: ReactElement;
-  additionalDetails: ReactElement;
 }
 
 const ProvisioningTemplate: React.FC<ProvisioningTemplateProps> = ({
   header,
   statusAndEstimation,
   serviceDetails,
-  additionalDetails,
 }) => {
   return (
     <>
@@ -20,10 +18,7 @@ const ProvisioningTemplate: React.FC<ProvisioningTemplateProps> = ({
         {header}
         <div className="content">
           {statusAndEstimation}
-          <div className="form-container">
-            {serviceDetails}
-            {additionalDetails}
-          </div>
+          <div className="form-container">{serviceDetails}</div>
         </div>
       </main>
       <style>{`
@@ -40,9 +35,6 @@ const ProvisioningTemplate: React.FC<ProvisioningTemplateProps> = ({
             gap: 20px;
         }
         
-        .form-container{
-            flex-grow: 1;
-        }
     `}</style>
     </>
   );

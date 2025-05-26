@@ -87,6 +87,7 @@ const Table = () => {
                   indeterminate={someSelected}
                   onCheckedChange={toggleSelectAll}
                   aria-label="Select all rows"
+                  id="header"
                 />
               </th>
               <th className="th">
@@ -117,6 +118,7 @@ const Table = () => {
                     checked={selectedRows.has(id)}
                     onCheckedChange={() => toggleRow(id)}
                     aria-label={`Select row ${index + 1}`}
+                    id={id}
                   />
                 </td>
                 <td>
