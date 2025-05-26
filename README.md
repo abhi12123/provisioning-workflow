@@ -13,5 +13,5 @@ Tools used
 - storybook for hosting the design system components
 - Carbon Design system icons
 
-Project hosted link : https://provisioning-workflow-mlioy23le-abhinav-vps-projects.vercel.app/
-storybook link : https://provisioning-workflow-gavinrays-abhinav-vps-projects.vercel.app/
+Project hosted link :https://provisioning-workflow.vercel.app/
+storybook link : https://provisioning-workflow-ds.vercel.app/
