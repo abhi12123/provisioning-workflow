@@ -10,7 +10,7 @@ interface BodyProps extends React.HTMLAttributes<HTMLElement> {
 const Body: React.FC<BodyProps> = ({
   as = "h1",
   children,
-  variant = "md",
+  variant = "primary",
   className,
   ...rest
 }) => {
@@ -18,7 +18,7 @@ const Body: React.FC<BodyProps> = ({
 
   return (
     <>
-      <Tag className={`body ${variant} ${className}`} {...rest}>
+      <Tag className={`body ${variant}-text ${className}`} {...rest}>
         {children}
       </Tag>
 
@@ -27,13 +27,13 @@ const Body: React.FC<BodyProps> = ({
           font-feature-settings: "liga" off, "clig" off;
           font-style: normal;
         }
-        .primary {
+        .primary-text {
           font-size: 13px;
           font-weight: 450;
           line-height: 20px;
           letter-spacing: 0px;
         }
-        .secondary {
+        .secondary-text {
           font-size: 11px;
           font-weight: 450;
           line-height: 16px;

@@ -81,10 +81,14 @@ const theme = {
     },
   },
   spacing: {
+    "extra-large": "48px",
     large: "32px",
+    "semi-large": "24px",
     "semi-medium": "12px",
+    medium: "16px",
     regular: "8px",
     small: "4px",
+    smallest: "2px",
   },
 };
 

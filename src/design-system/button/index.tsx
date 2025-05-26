@@ -1,10 +1,11 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant: "primary" | "secondary" | "tertiary";
+  variant?: "primary" | "secondary" | "tertiary";
   leadingIcon?: React.ReactElement;
   trailingIcon?: React.ReactElement;
   loading?: boolean;
+  children?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -12,6 +13,7 @@ const Button: React.FC<ButtonProps> = ({
   leadingIcon,
   trailingIcon,
   loading,
+  children,
   className = "",
   ...props
 }) => {
@@ -32,51 +34,61 @@ const Button: React.FC<ButtonProps> = ({
           outline: none; /* removes native focus ring */
         }
 
+        .icon-button {
+          width: var(--spacing-large);
+          padding: 0;
+        }
+
         .button:focus {
           box-shadow: 0 0 0 3px var(--colors-border-focus); /* custom focus ring */
         }
 
-        .primary {
+        .primary-button {
           background: var(--colors-primary-200);
           color: var(--colors-text-inverse);
         }
 
-        .primary:hover {
+        .primary-button:hover {
           background: var(--colors-primary-300);
         }
 
-        .primary:disabled,
+        .primary-button:disabled,
         .secondary:disabled {
           background: var(--colors-surface-100);
           color: var(--colors-text-disabled);
         }
 
-        .secondary {
+        .secondary-button {
           border: 1px solid var(--colors-surface-300);
           color: var(--colors-text-subtler);
           background: var(--colors-surface-primary);
         }
 
-        .secondary:hover {
+        .secondary-button:hover {
           color: var(--colors-primary-200);
           background: var(--colors-surface-50);
         }
 
-        .tertiary {
+        .tertiary-button {
           color: var(--colors-text-subtler);
         }
 
-        .tertiary:hover {
+        .tertiary-button:hover {
           color: var(--colors-primary-200);
         }
 
-        .tertiary:disabled {
+        .tertiary-button:disabled {
           color: var(--colors-text-subtlest);
         }
       `}</style>
-      <button className={`button ${variant} ${className}`} {...props}>
+      <button
+        className={`button ${variant}-button ${
+          !children ? "icon-button" : ""
+        } ${className}`}
+        {...props}
+      >
         {leadingIcon}
-        Button
+        {children}
         {trailingIcon}
       </button>
     </>
