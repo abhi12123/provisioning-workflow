@@ -27,7 +27,6 @@ const Select: React.FC<SelectProps> = ({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  // Close dropdown on outside click
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -37,7 +36,6 @@ const Select: React.FC<SelectProps> = ({
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -46,15 +44,15 @@ const Select: React.FC<SelectProps> = ({
     <>
       <div
         ref={wrapperRef}
-        className={className}
-        style={{ position: "relative", width: "100%", userSelect: "none" }}
+        className={`select-wrapper ${className ?? ""}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
       >
         <div
           role="button"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-haspopup="listbox"
-          aria-expanded={open}
+          tabIndex={0}
           className="select-trigger"
+          onClick={() => setOpen((prev) => !prev)}
         >
           <Body variant="secondary">
             {selectedOption ? selectedOption.label : placeholder}
@@ -63,42 +61,19 @@ const Select: React.FC<SelectProps> = ({
         </div>
 
         {open && (
-          <ul
-            role="listbox"
-            tabIndex={-1}
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-              margin: 0,
-              padding: 0,
-              listStyle: "none",
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: 4,
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-              maxHeight: 200,
-              overflowY: "auto",
-              zIndex: 1000,
-            }}
-          >
+          <ul role="listbox" className="select-list">
             {options.length === 0 ? (
-              <li
-                style={{
-                  padding: "8px 12px",
-                  color: "#888",
-                  userSelect: "none",
-                }}
-              >
-                No options
-              </li>
+              <li className="select-no-options">No options</li>
             ) : (
               options.map((option) => (
                 <li
                   key={option.value}
                   role="option"
                   aria-selected={value === option.value}
+                  tabIndex={0}
+                  className={`select-option ${
+                    value === option.value ? "selected" : ""
+                  }`}
                   onClick={() => {
                     onValueChange?.(option.value);
                     setOpen(false);
@@ -109,22 +84,6 @@ const Select: React.FC<SelectProps> = ({
                       setOpen(false);
                     }
                   }}
-                  tabIndex={0}
-                  style={{
-                    padding: "8px 12px",
-                    cursor: "pointer",
-                    backgroundColor:
-                      value === option.value ? "#0f62fe" : "transparent",
-                    color: value === option.value ? "white" : "black",
-                  }}
-                  onMouseOver={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      value === option.value ? "#0f62fe" : "#f5f5f5")
-                  }
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.backgroundColor =
-                      value === option.value ? "#0f62fe" : "transparent")
-                  }
                 >
                   {option.label}
                 </li>
@@ -133,7 +92,13 @@ const Select: React.FC<SelectProps> = ({
           </ul>
         )}
       </div>
+
       <style jsx>{`
+        .select-wrapper {
+          position: relative;
+          width: 100%;
+          user-select: none;
+        }
         .select-trigger {
           display: flex;
           height: 32px;
@@ -142,6 +107,43 @@ const Select: React.FC<SelectProps> = ({
           align-items: center;
           border-radius: 4px;
           border: 1px solid var(--colors-surface-200);
+          cursor: pointer;
+        }
+        .select-list {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          background-color: white;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+        }
+        .select-no-options {
+          padding: 8px 12px;
+          color: #888;
+          user-select: none;
+        }
+        .select-option {
+          padding: 8px 12px;
+          cursor: pointer;
+          color: black;
+        }
+        .select-option.selected {
+          background-color: #0f62fe;
+          color: white;
+        }
+        .select-option:hover {
+          background-color: #f5f5f5;
+        }
+        .select-option.selected:hover {
+          background-color: #0f62fe;
         }
       `}</style>
     </>

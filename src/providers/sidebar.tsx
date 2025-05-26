@@ -1,3 +1,7 @@
+/**
+ * Can be used to collapse and expand the sidebar
+ */
+
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface SidebarContextType {

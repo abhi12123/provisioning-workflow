@@ -6,7 +6,7 @@ import Breadcrumb from "../molecules/breadcrumb";
 import HeaderActions from "../molecules/header-actions";
 import CreateHeader from "../molecules/create-header";
 import StatusAndEstimation from "../organisms/status-and-estimation";
-import ServiceDetails from "../organisms/service-details";
+import ServiceDetails from "../organisms/service-form";
 import { useSidebarExpanded } from "../providers/sidebar";
 import Stepper from "../molecules/stepper";
 import Body from "../design-system/typography/Body";
@@ -14,12 +14,12 @@ import Body from "../design-system/typography/Body";
 const ProvisioningPage = () => {
   const { isExpanded } = useSidebarExpanded();
 
+  /**
+   * When the element in view changes ( using Intersection observer ) it updates the active
+   * form state
+   */
   const [activeFormState, setActiveFormState] =
     useState<string>("service-details");
-
-  console.log("activeFormState", activeFormState);
-  console.log(activeFormState === "service-details");
-  console.log(activeFormState === "additional-setting");
 
   return (
     <div className="flex">

@@ -12,7 +12,7 @@ const Tag: React.FC<TagProps> = ({ children, onDelete }) => {
       <div className="tag">
         <AddAlt size={14} className="add-icon" />
         {children}
-        <Close size={14} onClick={onDelete} />
+        <Close size={14} onClick={onDelete} className="close-btn" />
       </div>
       <style jsx>{`
         .tag {
@@ -30,6 +30,9 @@ const Tag: React.FC<TagProps> = ({ children, onDelete }) => {
 
         .tag .add-icon {
           color: var(--colors-text-subtlest);
+        }
+        .close-btn {
+          cursor: pointer;
         }
       `}</style>
     </>

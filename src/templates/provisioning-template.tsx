@@ -25,7 +25,6 @@ const ProvisioningTemplate: React.FC<ProvisioningTemplateProps> = ({
         .provisioning-template {
             background: var(--colors-surface-50);
         }
-
         .content {
             display: flex;
             align-items: flex-start;

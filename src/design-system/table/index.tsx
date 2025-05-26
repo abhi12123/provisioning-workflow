@@ -1,27 +1,37 @@
 import { useState } from "react";
 import Body from "../typography/Body";
 import { ChevronSort } from "@carbon/icons-react";
-import Link from "../link";
-import Checkbox from "../checkbox"; // your Checkbox component
+import Checkbox from "../checkbox";
 
-const rowsData = [
-  { id: "row1", label: "Row 1" },
-  { id: "row2", label: "Row 2" },
-  { id: "row3", label: "Row 3" },
-  { id: "row4", label: "Row 4" },
-];
+export type Column<T> = {
+  header: string;
+  key: keyof T;
+  headerAlign?: "left" | "right" | "center";
+  cellAlign?: "left" | "right" | "center";
+  render?: (row: T) => React.ReactNode;
+};
 
-const Table = () => {
+type TableProps<T> = {
+  data: T[];
+  columns: Column<T>[];
+  selectable?: boolean;
+};
+
+const Table = <T extends { id: string }>({
+  data,
+  columns,
+  selectable = true,
+}: TableProps<T>) => {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const allSelected = selectedRows.size === rowsData.length;
+  const allSelected = selectedRows.size === data.length;
   const someSelected = selectedRows.size > 0 && !allSelected;
 
   const toggleSelectAll = () => {
     if (allSelected) {
       setSelectedRows(new Set());
     } else {
-      setSelectedRows(new Set(rowsData.map((r) => r.id)));
+      setSelectedRows(new Set(data.map((r) => r.id)));
     }
   };
 
@@ -64,10 +74,13 @@ const Table = () => {
           padding: var(--spacing-regular) var(--spacing-semi-medium);
         }
         .align-left {
-          justify-content: start;
+          text-align: left;
         }
         .align-right {
-          justify-content: end;
+          text-align: right;
+        }
+        .align-center {
+          text-align: center;
         }
         .checkbox-cell {
           padding-left: var(--spacing-semi-medium);
@@ -76,60 +89,55 @@ const Table = () => {
           text-align: center;
         }
       `}</style>
+
       <div className="table-container">
-        <table className="table" role="grid" aria-multiselectable="true">
+        <table className="table" role="grid" aria-multiselectable={selectable}>
           <thead className="thead">
             <tr>
-              <th className="th checkbox-cell">
-                {/* Header checkbox */}
-                <Checkbox
-                  checked={allSelected}
-                  indeterminate={someSelected}
-                  onCheckedChange={toggleSelectAll}
-                  aria-label="Select all rows"
-                  id="header"
-                />
-              </th>
-              <th className="th">
-                <div className="header-element align-left">
-                  <Body variant="primary">Header 1</Body>
-                  <ChevronSort />
-                </div>
-              </th>
-              <th className="th">
-                <div className="header-element align-left">
-                  <Body variant="primary">Header 2</Body>
-                  <ChevronSort />
-                </div>
-              </th>
-              <th className="th">
-                <div className="header-element align-right">
-                  <Body variant="primary">Header 3</Body>
-                  <ChevronSort />
-                </div>
-              </th>
+              {selectable && (
+                <th className="th checkbox-cell">
+                  <Checkbox
+                    checked={allSelected}
+                    indeterminate={someSelected}
+                    onCheckedChange={toggleSelectAll}
+                    aria-label="Select all rows"
+                    id="header"
+                  />
+                </th>
+              )}
+              {columns.map((col, i) => (
+                <th key={i} className={`th align-${col.headerAlign ?? "left"}`}>
+                  <div className="header-element">
+                    <Body variant="primary">{col.header}</Body>
+                    <ChevronSort />
+                  </div>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {rowsData.map(({ id, label }, index) => (
-              <tr key={id}>
-                <td className="checkbox-cell">
-                  <Checkbox
-                    checked={selectedRows.has(id)}
-                    onCheckedChange={() => toggleRow(id)}
-                    aria-label={`Select row ${index + 1}`}
-                    id={id}
-                  />
-                </td>
-                <td>
-                  <Link href="#">{label}, Cell 1</Link>
-                </td>
-                <td>
-                  <Link href="#">{label}, Cell 2</Link>
-                </td>
-                <td>
-                  <Link href="#">{label}, Cell 3</Link>
-                </td>
+            {data.map((row, rowIndex) => (
+              <tr key={row.id}>
+                {selectable && (
+                  <td className="checkbox-cell">
+                    <Checkbox
+                      checked={selectedRows.has(row.id)}
+                      onCheckedChange={() => toggleRow(row.id)}
+                      aria-label={`Select row ${rowIndex + 1}`}
+                      id={row.id}
+                    />
+                  </td>
+                )}
+                {columns.map((col, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`align-${col.cellAlign ?? "left"}`}
+                  >
+                    {col.render
+                      ? col.render(row)
+                      : (row[col.key] as React.ReactNode)}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

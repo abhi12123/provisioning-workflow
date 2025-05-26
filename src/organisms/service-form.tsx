@@ -1,62 +1,40 @@
 import React, { useEffect } from "react";
-import Heading from "../design-system/typography/Heading";
-import Body from "../design-system/typography/Body";
-import InputField from "../design-system/input-field";
-
+import Heading from "../design-system/typography/Heading.tsx";
+import Body from "../design-system/typography/Body.tsx";
+import InputField from "../design-system/input-field/index.tsx";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Radix UI components
-import Tag from "../design-system/tag";
-import Combobox from "../design-system/combobox";
-import Checkbox from "../design-system/checkbox";
-import RadioGroup from "../design-system/radio-group.tsx";
+import Tag from "../design-system/tag/index.tsx";
+import Combobox from "../design-system/combobox/index.tsx";
+import Checkbox from "../design-system/checkbox/index.tsx";
+import RadioGroup from "../design-system/radio-group.tsx/index.tsx";
 import Table from "../design-system/table/index.tsx";
 import useInView from "../hooks/useInView.ts";
 import RadioButton from "../design-system/radio/index.tsx";
 import Label from "../design-system/label/index.tsx";
-
-const tagPattern = /^[^:]+:[^:]+$/;
-
-const FormSchema = z.object({
-  serviceName: z.string().min(1, "Service name is required"),
-  description: z.string().optional(),
-  tags: z
-    .array(
-      z.string().regex(tagPattern, "Each tag must be in <key>:<value> format")
-    )
-    .min(1, "Atleast one tag is required"),
-  softwareRelease: z.string().min(1, "Software release is required"),
-  version: z.string().min(1, "Version is required"),
-  createAsContainerDB: z.boolean().optional(),
-  windowPreference: z.string().min(1, "Window preference is required"),
-  startDay: z.string().min(1, "Start day is required"),
-  startTime: z.string().min(1, "Start time is required"),
-  duration: z.string().min(1, "Duration is required"),
-  enableAutoMinorUpdate: z.boolean(),
-  sla: z.string().min(1, "SLA is required"),
-  snapshotTime: z.string().min(1, "Snapshot time is required"),
-});
-
-type FormData = z.infer<typeof FormSchema>;
+import { ServiceFormSchema, tagPattern } from "../utils/ServiceFormSchema.ts";
+import { columns, rowsData } from "../utils/SampleTableData.tsx";
 
 interface ServiceDetailsProps {
   onChangeElementInView: (element: string) => void;
 }
 
-const ServiceDetails: React.FC<ServiceDetailsProps> = ({
+const ServiceForm: React.FC<ServiceDetailsProps> = ({
   onChangeElementInView,
 }) => {
+  type FormData = z.infer<typeof ServiceFormSchema>;
+
   const {
     register,
     handleSubmit,
     control,
     setValue,
     watch,
+    resetField,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(ServiceFormSchema),
     defaultValues: {
       tags: [],
       createAsContainerDB: false,
@@ -68,8 +46,11 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   const { ref, isInView } = useInView({ threshold: 0.4 });
 
   const onSubmit = (data: FormData) => {
+    alert(`Form submitted ${JSON.stringify(data, undefined, 4)}`);
     console.log("Form submitted:", data);
   };
+
+  console.log(errors);
 
   const tags = watch("tags");
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,6 +76,14 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   }, [isInView]);
 
   const windowPreference = watch("windowPreference");
+
+  useEffect(() => {
+    if (windowPreference === "no-preferences") {
+      resetField("startDay", { defaultValue: undefined });
+      resetField("startTime", { defaultValue: undefined });
+      resetField("duration", { defaultValue: undefined });
+    }
+  }, [windowPreference, resetField]);
 
   return (
     <form
@@ -275,7 +264,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({
                 name="duration"
                 render={({ field }) => (
                   <Combobox
-                    value={field.value}
+                    value={field.value || ""}
                     onValueChange={field.onChange}
                     options={[
                       { label: "1", value: "1" },
@@ -332,7 +321,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({
             {errors.snapshotTime?.message}
           </Body>
         </div>
-        <Table />
+        <Table data={rowsData} columns={columns} selectable={true} />
       </div>
       <style jsx>{`
         .service-details,
@@ -405,4 +394,4 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({
   );
 };
 
-export default ServiceDetails;
+export default ServiceForm;

@@ -20,6 +20,9 @@ const HeaderActions = () => {
           align-items: center;
           gap: 8px;
         }
+        .header-actions button {
+          margin: auto;
+        }
         .divider {
           width: 1px;
           height: 20px;

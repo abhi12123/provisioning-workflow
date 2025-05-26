@@ -1,3 +1,8 @@
+/**
+ * This component converts json structure from theme to css variables
+ * and adds it globally
+ */
+
 import type { JSX, ReactNode } from "react";
 import theme from "./theme";
 import "../styles.css";

@@ -4,13 +4,11 @@ import { SidebarProvider } from "./providers/sidebar";
 
 function App() {
   return (
-    <>
-      <ThemeProvider>
-        <SidebarProvider>
-          <ProvisioningPage />
-        </SidebarProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider>
+      <SidebarProvider>
+        <ProvisioningPage />
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 
