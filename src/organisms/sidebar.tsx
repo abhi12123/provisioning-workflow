@@ -52,6 +52,7 @@ const Sidebar = () => {
             <SidebarItem
               leadingIcon={<Db2Database size={16} />}
               label={isExpanded ? "My services" : ""}
+              isActive
             />
             <SidebarItem
               leadingIcon={<CicsDb2Connection size={16} />}
