@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Body from "../typography/Body";
 import { ChevronSort } from "@carbon/icons-react";
 import Link from "../link";

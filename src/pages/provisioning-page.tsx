@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ProvisioningTemplate from "../templates/provisioning-template";
 import Header from "../organisms/header";
 import Sidebar from "../organisms/sidebar";

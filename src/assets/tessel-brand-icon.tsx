@@ -1,5 +1,3 @@
-import React from "react";
-
 const TesselBrandIcon = () => {
   return (
     <svg

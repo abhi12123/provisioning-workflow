@@ -1,4 +1,3 @@
-import React from "react";
 import Credits from "../atoms/credits";
 import Button from "../design-system/button";
 import { Bullhorn } from "@carbon/icons-react";

@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as RadixCheckbox from "@radix-ui/react-checkbox";
-import { CheckboxChecked, CheckboxIndeterminate } from "@carbon/icons-react";
 import Body from "../typography/Body";
 
 interface CheckboxProps {

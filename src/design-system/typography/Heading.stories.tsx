@@ -62,7 +62,6 @@ export const Small: Story = {
 export const FormLabel: Story = {
   args: {
     variant: "form",
-    as: "label",
     children: "This is a Form Label",
   },
 };

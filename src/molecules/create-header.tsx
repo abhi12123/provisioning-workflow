@@ -1,4 +1,3 @@
-import React from "react";
 import Heading from "../design-system/typography/Heading";
 import Button from "../design-system/button";
 import { Close, Code } from "@carbon/icons-react";

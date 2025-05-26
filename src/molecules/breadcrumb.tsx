@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "../design-system/link";
 
 const Breadcrumb = () => {

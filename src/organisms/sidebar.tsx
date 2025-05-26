@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import SidebarItem from "../molecules/sidebar-item";
 import Heading from "../design-system/typography/Heading";
 import TesselBrandIcon from "../assets/tessel-brand-icon";

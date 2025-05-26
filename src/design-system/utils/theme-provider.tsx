@@ -1,4 +1,3 @@
-import React from "react";
 import type { JSX, ReactNode } from "react";
 import theme from "./theme";
 import "../styles.css";
